@@ -1,0 +1,94 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "WBL Index by Region and Country",
+  "width": 600,
+  "height": 400,
+  "padding": 40,
+  "autosize": "pad",
+  "signals": [
+    {
+      "name": "Region",
+      "value": "High income: OECD",
+      "bind": {
+        "input": "select",
+        "options": [
+          "High income: OECD",
+          "Europe & Central Asia",
+          "Latin America & Caribbean",
+          "East Asia & Pacific",
+          "Sub-Saharan Africa",
+          "South Asia",
+          "Middle East & North Africa"
+        ]
+      }
+    }
+  ],
+  "data": [
+    {
+      "name": "table",
+      "url": "https://raw.githubusercontent.com/soniasocadagui/dataviz/main/WBL_DataViz.json",
+      "transform": [{"type": "filter", "expr": "(datum.region === Region)"}]
+    }
+  ],
+  "scales": [
+    {
+      "name": "year",
+      "type": "point",
+      "range": "width",
+      "domain": {"data": "table", "field": "reportyr"}
+    },
+    {
+      "name": "wbl_index",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "table", "field": "wbl_index"}
+    },
+    {
+      "name": "economy",
+      "type": "ordinal",
+      "range": "category",
+      "domain": {"data": "table", "field": "economy"}
+    }
+  ],
+  "axes": [
+    {
+      "orient": "bottom",
+      "scale": "year",
+      "labelAngle": -90,
+      "labelAlign": "right",
+      "title": "year"
+    },
+    {"orient": "left", "scale": "wbl_index", "title": "WBL Index"}
+  ],
+  "legends": [{"fill": "economy"}],
+  "marks": [
+    {
+      "type": "group",
+      "from": {
+        "facet": {"name": "series", "data": "table", "groupby": "economy"}
+      },
+      "marks": [
+        {
+          "type": "line",
+          "from": {"data": "series"},
+          "encode": {
+            "enter": {
+              "x": {"scale": "year", "field": "reportyr"},
+              "y": {"scale": "wbl_index", "field": "wbl_index"},
+              "stroke": {"scale": "economy", "field": "economy"},
+              "strokeWidth": {"value": 2}
+            },
+            "update": {
+              "region": {"signal": "Region"},
+              "strokeOpacity": {"value": 1}
+            },
+            "hover": {"strokeOpacity": {"value": 0.5}}
+          }
+        }
+      ]
+    }
+  ],
+  "config": {}
+}

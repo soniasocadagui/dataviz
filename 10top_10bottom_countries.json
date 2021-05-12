@@ -1,0 +1,131 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "A ranged dot plot",
+  "title": {
+    "text": "The 10 most and 10 least advanced economies in WBL Index",
+    "anchor": "start",
+    "dy": -8
+  },
+  "width": 300,
+  "height": 450,
+  "data": {
+    "url": "https://raw.githubusercontent.com/soniasocadagui/dataviz/main/WBL_DataViz_filter.json"
+  },
+  "transform": [
+    {"filter": {"field": "reportyr", "oneOf": [1971, 2021]}},
+    {"calculate": "datum.delta/100", "as": "deltapercent"}
+  ],
+  "encoding": {
+    "x": {"field": "wbl_index", "type": "quantitative", "title": "WBL Index"},
+    "y": {
+      "field": "economy",
+      "type": "nominal",
+      "title": "Economies",
+      "axis": {"offset": 5, "ticks": false, "minExtent": 70, "domain": false},
+      "sort": [
+        "São Tomé and Príncipe",
+        "United Arab Emirates",
+        "Spain",
+        "South Africa",
+        "Belgium",
+        "Portugal",
+        "Togo",
+        "Luxembourg",
+        "Saudi Arabia",
+        "Congo, Dem. Rep.",
+        "Lebanon",
+        "Syrian Arab Republic",
+        "Kuwait",
+        "Myanmar",
+        "West Bank and Gaza",
+        "Yemen, Rep.",
+        "Palau",
+        "Micronesia, Fed. Sts.",
+        "Iran, Islamic Rep.",
+        "Qatar"
+      ]
+    }
+  },
+  "layer": [
+    {
+      "mark": "line",
+      "encoding": {
+        "detail": {"field": "economy", "type": "nominal"},
+        "color": {"value": "#db646f"}
+      }
+    },
+    {
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "tooltip": {"content": "data"},
+        "cursor": "pointer"
+      },
+      "encoding": {
+        "color": {
+          "field": "reportyr",
+          "type": "ordinal",
+          "scale": {"domain": [1971, 2021], "range": ["#911a24", "#e6959c"]},
+          "title": "Year"
+        },
+        "size": {"value": 100},
+        "opacity": {"value": 1}
+      }
+    },
+    {
+      "mark": {"type": "rule"},
+      "encoding": {"y": {"value": 221}, "stroke": {"value": "green"}}
+    },
+    {
+      "mark": {"type": "text", "fontSize": 12, "dy": -8},
+      "encoding": {
+        "x": {
+          "field": "wbl_index",
+          "aggregate": "mean",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "deltapercent",
+          "type": "quantitative",
+          "format": ".1%"
+        },
+        "color": {"value": "gray"}
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 20, "dy": -18},
+      "encoding": {
+        "y": {"value": 40},
+        "x": {"value": 285},
+        "text": {"value": "✔️"}
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 35, "dy": -18},
+      "encoding": {
+        "y": {"value": 130},
+        "x": {"value": 30},
+        "text": {"value": "🙆‍♀️‍"}
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 35, "dy": -18},
+      "encoding": {
+        "y": {"value": 350},
+        "x": {"value": 285},
+        "text": {"value": "🙅‍♀️‍"}
+      }
+    },
+    {
+      "mark": {"type": "text", "fontSize": 20, "dy": -18},
+      "encoding": {
+        "y": {"value": 450},
+        "x": {"value": 30},
+        "text": {"value": "❌"}
+      }
+    }
+  ],
+  "config": {
+    "axis": {"labelFontSize": 12, "titleFontSize": 12, "titlePadding": 12}
+  }
+}
